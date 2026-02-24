@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Test</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        #messages {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+        .message {
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .user {
+            background: #e3f2fd;
+            text-align: right;
+        }
+        .bot {
+            background: #f1f8e9;
+        }
+        input {
+            width: 80%;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🤖 Chatbot Test</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const socket = io('http://localhost:3000', {
+            query: { userId: 'testUser123' }
+        });
+
+        socket.on('connect', () => {
+            addMessage('✅ Connected to server', 'system');
+            console.log('Connected');
+        });
+
+        socket.on('previousChat', (messages) => {
+            addMessage(`📬 Loaded ${messages.length} previous messages`, 'system');
+            messages.forEach(msg => {
+                addMessage(msg.message, msg.sender);
+            });
+        });
+
+        socket.on('botResponse', (data) => {
+            addMessage(data.message, 'bot');
+        });
+
+        socket.on('error', (err) => {
+            addMessage(`❌ Error: ${err}`, 'error');
+        });
+
+        socket.on('disconnect', () => {
+            addMessage('🔌 Disconnected', 'system');
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addMessage(message, 'user');
+            socket.emit('sendMessage', message);
+            input.value = '';
+        }
+
+        function addMessage(text, sender) {
+            const messagesDiv = document.getElementById('messages');
+            const msgElement = document.createElement('div');
+            msgElement.className = `message ${sender}`;
+            msgElement.textContent = text;
+            messagesDiv.appendChild(msgElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Send on Enter key
+        document.getElementById('messageInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
