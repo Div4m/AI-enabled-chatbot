@@ -63,12 +63,4 @@ export class ChatService {
     getPreviousChat(userId: string): chatMessage[] {
         return this.chat.get(userId) || [];
     }
-
-    clearChat(userId: string): void {
-        this.chat.delete(userId);
-    }
-
-    getMessageCount(userId: string): number {
-        return this.chat.get(userId)?.length || 0;
-    }
 }

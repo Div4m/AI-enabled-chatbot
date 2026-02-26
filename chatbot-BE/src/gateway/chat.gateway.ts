@@ -17,7 +17,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // this methods is called when a client connects and handle the conncetion 
     async handleConnection(client: Socket) {
         const userId = client.handshake.query.userId as string;
-
+            console.log("Connected userId:", userId);
+            console.log("Current Map Keys:", Array.from(this.chatService['chat'].keys()));
         if(!userId) {
             client.disconnect();
             return;
@@ -47,6 +48,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         try {
             const botResponse = await this.chatService.userMessage(userId, message);
             client.emit('botResponse', botResponse);
+            console.log(`User ${userId} bot response: ${botResponse.message}`);
         } catch(error: any) {
             console.error('Error in handleMessage:', error.message);
             client.emit('error', error.message || 'Failed to process your message');
