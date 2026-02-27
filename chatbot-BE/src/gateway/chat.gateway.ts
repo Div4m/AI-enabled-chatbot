@@ -17,8 +17,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // this methods is called when a client connects and handle the conncetion 
     async handleConnection(client: Socket) {
         const userId = client.handshake.query.userId as string;
-            console.log("Connected userId:", userId);
-            console.log("Current Map Keys:", Array.from(this.chatService['chat'].keys()));
         if(!userId) {
             client.disconnect();
             return;
@@ -26,7 +24,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         const previousChat = this.chatService.getPreviousChat(userId);
         client.emit('previousChat', previousChat);
-        console.log(`User ${userId} connected`);
     }
     //user sends message to bot
     @SubscribeMessage('sendMessage')
@@ -34,6 +31,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         @ConnectedSocket() client: Socket,
         @MessageBody() message: string
     ) {
+        // here we are getting the user id from the query parameters of the socket connection
         const userId = client.handshake.query.userId as string;
         
         if(!userId) {
@@ -46,17 +44,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
             return;
         }
         try {
+            // here we are giving the response from the chat service to the client
             const botResponse = await this.chatService.userMessage(userId, message);
             client.emit('botResponse', botResponse);
-            console.log(`User ${userId} bot response: ${botResponse.message}`);
         } catch(error: any) {
-            console.error('Error in handleMessage:', error.message);
             client.emit('error', error.message || 'Failed to process your message');
         }
     }
 
     async handleDisconnect(client: Socket) {
         const userId = client.handshake.query.userId as string;
-        console.log(`User ${userId} disconnected`);
     }
 }

@@ -42,7 +42,7 @@ export class ChatService {
                     timeout: 30000
                 }
             );
-
+            // extract the bot response from the gemini api 
             const reply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
             
             if (!reply) {
