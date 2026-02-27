@@ -4,8 +4,8 @@ body {
 }
 
 .chat-container {
-  width: 420px;
-  height: 550px;
+  width: 700px;
+  height: 700px;
   margin: 60px;
   background: #ffffff;
   border-radius: 16px;
@@ -46,13 +46,26 @@ body {
 }
 
 .message {
-  padding: 10px 14px;
+  padding: 5px 10px;
   border-radius: 18px;
   max-width: 75%;
   font-size: 14px;
   line-height: 1.4;
   animation: fadeIn 0.2s ease-in-out;
   word-wrap: break-word;
+}
+.message pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+  padding: 12px;
+  border-radius: 10px;
+  color:#f1f1f1;
+  background: #1e1e1e;
+}
+
+.message code {
+  word-break: break-word;
 }
 
 .user {

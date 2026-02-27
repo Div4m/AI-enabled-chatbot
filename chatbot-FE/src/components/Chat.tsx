@@ -3,6 +3,7 @@ import { userId } from '../service/socketService.ts';
 import type { MessageFormat } from "../types/message.ts";
 import './Chat.css';
 import {socket} from '../service/socketService.ts';
+import ReactMarkdown from 'react-markdown';
 
 const ChatMessages = () => {
     const [messages, setMessages] = useState<MessageFormat[]>([]);
@@ -60,13 +61,13 @@ const ChatMessages = () => {
         <div className="messages">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender}`}>
-              {msg.message}
+            <ReactMarkdown>{msg.message}</ReactMarkdown>
             </div>
           ))}
 
           {loading && (
             <div className="message bot typing">
-              <span></span><span></span>
+              <span></span><span></span><span></span>
             </div>
           )}
         </div>
