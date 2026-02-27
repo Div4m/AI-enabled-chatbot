@@ -1,4 +1,5 @@
-export interface Message {
-    sender: 'user' | 'bot',
-    content: string;
+export interface chatMessage {
+    message: string,
+    userId: string,
+    sender: 'user' | 'bot'
 }
