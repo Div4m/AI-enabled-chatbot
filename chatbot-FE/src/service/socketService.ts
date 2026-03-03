@@ -11,8 +11,8 @@ const generateUserId = () => {
 };
 
 export const userId = generateUserId();
-
-export const socket: Socket = io('http://localhost:3000', {
+// for local development,use this 'http://localhost:3000' url and for production use the deployed server url of backend 
+export const socket: Socket = io(import.meta.env.VITE_API_URL , {
     query: { userId },
 });
 
