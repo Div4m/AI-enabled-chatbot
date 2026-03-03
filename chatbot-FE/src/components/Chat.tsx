@@ -57,7 +57,7 @@ const ChatMessages = () => {
 
     return (
       <div className="chat-container">
-        <h2>AI-Jinn</h2>
+        <h2>Chat-Bot</h2>
         <div className="messages">
           {messages.map((msg, index) => (
             <div key={index} className={`message ${msg.sender}`}>

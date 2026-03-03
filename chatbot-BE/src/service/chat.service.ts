@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { chatMessage } from '../../src/types/message.type';
+import { format } from 'path';
 
 @Injectable()
 export class ChatService {
@@ -92,6 +93,11 @@ Do not answer general programming questions, comparisons between unrelated techn
                 this.chat.get(userId)?.push(restictedReply);
                 return restictedReply;
             }
+            // method to format the message using the previous chat history , so that gemini give response in the context of the previous conversation 
+            const formattedMessage = this.getPreviousChat(userId).slice(-5).map(msg=>({
+                role:"user",
+                parts:[{text: `${msg.sender}: ${msg.message}`}]
+            }))
             // Call Gemini API
             const response = await axios.post(
                 `${this.geminiApiUrl}?key=${this.geminiApiKey}`,
@@ -102,7 +108,7 @@ Do not answer general programming questions, comparisons between unrelated techn
                             role:'user',
                             parts:[{text: this.systemPrompt}]
                             },
-
+                            ...formattedMessage,
                             {
                             role:'user',
                             parts: [{
