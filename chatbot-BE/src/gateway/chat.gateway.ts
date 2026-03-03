@@ -9,6 +9,7 @@ import { ChatService } from "../service/chat.service";
             process.env.LOCAL_URL, // frontend local url
             process.env.FRONTEND_URL // production frontend url
         ],
+        methods: ['GET','POST'],
         credentials: true,
     }
 })
