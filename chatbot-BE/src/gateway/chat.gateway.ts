@@ -5,7 +5,11 @@ import { ChatService } from "../service/chat.service";
 // it creates a socket server that and open websocket connection 
 @WebSocketGateway({
     cors: {
-        origin: 'http://localhost:5173', // frontend url
+        origin: [
+            process.env.LOCAL_URL, // frontend local url
+            process.env.FRONTEND_URL // production frontend url
+        ],
+        credentials: true,
     }
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
