@@ -77,9 +77,6 @@ Do not answer general programming questions, comparisons between unrelated techn
             if (!this.geminiApiKey) {
                 throw new Error('Gemini API key is not configured');
             }
-
-            
-
             // Store user message
             const userChat: chatMessage = {sender: 'user', message, userId};
             this.chat.get(userId)?.push(userChat);
