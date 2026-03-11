@@ -8,12 +8,14 @@ import { ScraperService } from './scrapper/scrapper.service';
 import { ChunkService } from './chunks/chunk.service';
 import { EmbeddingService } from './embedding/embedding.service';
 import { RagService } from './rag/rag.service';
+import { RagController } from './rag/rag.controller';
+import { VectorSearchService } from './vector/vector.service';
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
   })],
-  controllers: [AppController],
+  controllers: [AppController,RagController],
   providers: [
     AppService, 
     ChatService, 
@@ -21,7 +23,8 @@ import { RagService } from './rag/rag.service';
     ScraperService,
     ChunkService,
     EmbeddingService,
-    RagService
+    RagService,
+    VectorSearchService
   ],
 })
 export class AppModule {}

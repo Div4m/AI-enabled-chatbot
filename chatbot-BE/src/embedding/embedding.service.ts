@@ -6,12 +6,12 @@ export class EmbeddingService {
     private genAI : GoogleGenerativeAI;
 
     constructor(){
-        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_Key || '');
+        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
     }
     async createEmbedding(text: string): Promise<number[]>{
         try{
             const model = this.genAI.getGenerativeModel({
-                model: 'text-embedding-004',
+                model: 'embedding-001',
             })
             const result = await model.embedContent(text);
             const embeddings = result.embedding.values;
