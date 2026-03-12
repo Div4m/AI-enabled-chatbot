@@ -1,25 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import axios from 'axios';
 
 @Injectable()
 export class EmbeddingService {
-    private genAI : GoogleGenerativeAI;
+  private apiKey = process.env.GEMINI_API_KEY;
 
-    constructor(){
-        this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+  private embeddingUrl =
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:embedContent';
+
+  async createEmbedding(text: string): Promise<number[]> {
+    try {
+      const response = await axios.post(
+        `${this.embeddingUrl}?key=${this.apiKey}`,
+        {
+          content: {
+            parts: [{ text }],
+          },
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      return response.data.embedding.values;
+    } catch (error) {
+      console.error('Error creating embedding:', error.response?.data || error);
+      throw new Error('Failed to create embedding');
     }
-    async createEmbedding(text: string): Promise<number[]>{
-        try{
-            const model = this.genAI.getGenerativeModel({
-                model: 'embedding-001',
-            })
-            const result = await model.embedContent(text);
-            const embeddings = result.embedding.values;
-            console.log('Generated embedding:', embeddings);
-            return embeddings;
-        } catch (error) {
-            console.error('Error creating embedding:', error);
-            throw new Error('Failed to create embedding');
-        }
-    }
+  }
 }
